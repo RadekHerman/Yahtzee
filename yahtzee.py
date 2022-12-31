@@ -47,6 +47,7 @@ class Player():
         # print(self.dice_number, "liczba pozostałych")
         return(selected)
 
+    
     # dice roll, number of dices
     def get_roll(self, dice_number):
         # self.dice_number = dice_number
@@ -233,32 +234,44 @@ def play():
         roll_result = players_objs[x].get_roll(players_objs[x].dice_number)
         # print roll results
         print(Terminal.output(roll_result))
+        # check current scoring based on all current dice
         all_current_dice = roll_result + selected
         print(game.check_current_scoring(players_objs[x].name, all_current_dice))
-        # print(all_current_dice, "TOTAL")
         # what you want to do next
         while rolls < 3:
             while True:
-                what_next = input("Select dice to keep & roll(1) or choose the score(2) or print current table(3): ") 
+                what_next = input("Select dice to keep (1) or put back dice for next roll(2) or choose the score(3) or print current table(4) or roll the dice(5): ") 
                 if what_next == "1":
                     # select dice to keep from the roll    
-                        selected += players_objs[x].select_dice(roll_result)
-                        print(Terminal.output(roll_result, selected))
-                        all_current_dice = roll_result + selected
-                        print(game.check_current_scoring(players_objs[x].name, all_current_dice))
-                        input(f"To roll dice, press any key.")
-                        roll_result = players_objs[x].get_roll(players_objs[x].dice_number)
-                        print(Terminal.output(roll_result, selected))
-                        all_current_dice = roll_result + selected
-                        print(game.check_current_scoring(players_objs[x].name, all_current_dice))
-                        print(all_current_dice, "TOTAL")
-                        break
+                    selected += players_objs[x].select_dice(roll_result)
+                    # print in terminal dice to roll and selected ones
+                    print(Terminal.output(roll_result, selected))
+                    # check current scoring based on all current dice
+                    all_current_dice = roll_result + selected
+                    print(game.check_current_scoring(players_objs[x].name, all_current_dice))
+                    pass
+
                 elif what_next == "2":
+                    # put back dice for next roll
+
+                    pass
+                elif what_next == "3":
+                    # choose the score(3)
                     rolls = 3
                     break
-                elif what_next == '3':
+                elif what_next == '4':
                     print(game.print_table(no_players, data_dictionary))
                     pass
+                elif what_next == "5":
+                    # roll
+                    # enter for next roll
+                    input(f"To roll dice, press any key.")
+                    roll_result = players_objs[x].get_roll(players_objs[x].dice_number)
+                    print(Terminal.output(roll_result, selected))
+                    all_current_dice = roll_result + selected
+                    print(game.check_current_scoring(players_objs[x].name, all_current_dice))
+                    print(all_current_dice, "TOTAL")
+                    break
                 else:
                     pass
             rolls += 1
