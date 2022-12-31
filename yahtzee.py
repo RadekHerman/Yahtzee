@@ -18,6 +18,7 @@ class Player():
         self._dice_number = n
 
     # create players function
+    # nazwy graczy powinny być różne <<<<<<<<<<<<<<<<<< to do
     def get_players(no_players):
         players_names=[]    
         for player in range(no_players):
@@ -64,8 +65,6 @@ class Player():
                 if x in selected:
                     selected.remove(x)
                     roll_result.append(x)
-                    
-
             else:
                 pass
         # update dice number for next roll
@@ -85,37 +84,38 @@ class Player():
                 
 
 class Game():
-    def __init__(self):
+    def __init__(self, data_dictionary):
         # number of rounds (będzie potrzebny update)
         self.round = 1
+        self.data_dictionary = data_dictionary
     
     def create_data_dictionary(self, players_objs):
         names = []
         for x in range(len(players_objs)):
             names.append(players_objs[x].name)
 
-        data = {"Category": [], "Aces":[], "Twos":[], "Threes":[], 
+        self.data_dictionary = {"Category": [], "Aces":[], "Twos":[], "Threes":[], 
         "Fours":[], "Fives":[], "Sixes":[], "Three Of A Kind":[], 
         "Four Of A Kind":[], "Full House":[], "Small Straight":[], 
         "Large Straight":[], "Yahtzee":[], "Chance":[]}
 
         for name in names:
-            data["Category"].append(name)
-            data["Aces"].append("-")
-            data["Twos"].append("-")
-            data["Threes"].append("-")
-            data["Fours"].append("-")
-            data["Fives"].append("-")
-            data["Sixes"].append("-")
-            data["Three Of A Kind"].append("-")
-            data["Four Of A Kind"].append("-")
-            data["Full House"].append("-")
-            data["Small Straight"].append("-")
-            data["Large Straight"].append("-")
-            data["Yahtzee"].append("-")
-            data["Chance"].append("-")
+            self.data_dictionary["Category"].append(name)
+            self.data_dictionary["Aces"].append("-")
+            self.data_dictionary["Twos"].append("-")
+            self.data_dictionary["Threes"].append("-")
+            self.data_dictionary["Fours"].append("-")
+            self.data_dictionary["Fives"].append("-")
+            self.data_dictionary["Sixes"].append("-")
+            self.data_dictionary["Three Of A Kind"].append("-")
+            self.data_dictionary["Four Of A Kind"].append("-")
+            self.data_dictionary["Full House"].append("-")
+            self.data_dictionary["Small Straight"].append("-")
+            self.data_dictionary["Large Straight"].append("-")
+            self.data_dictionary["Yahtzee"].append("-")
+            self.data_dictionary["Chance"].append("-")
 
-        return data
+        return self.data_dictionary
 
     def print_table(self,no_players, data_dictionary):
         table = []     
@@ -131,11 +131,24 @@ class Game():
         
         pass
 
-    def check_table_if_no_score(self):
-        pass
+    def check_table_if_no_score(self, player_name):
+        print(player_name, "player name form check")
+        player_table_values=[]
+        index_name = self.data_dictionary["Category"].index(player_name)
+        #print(self.data_dictionary.keys())
+        for key, value in self.data_dictionary.items():
+            #print(value[index_name])
+            if value[index_name] == "-":
+                player_table_values.append(key)
+        
+        return player_table_values
+        
 
     def check_current_scoring(self, player_name, all_current_dice):
-  
+        
+        player_table_values = self.check_table_if_no_score(player_name)
+        print(player_table_values, "player values")
+
         # print(player_name, all_current_dice)
         if 1 in all_current_dice:
             score = 1 * all_current_dice.count(1)
@@ -244,13 +257,18 @@ class Terminal():
 
 
 def play():
+    os.system('clear') #<<<<<<<<<<<<<<< to do - w innych miejscach <<<<<<<<<<<<
     # create the players
-    no_players = int(input("number of players"))
+    #określić maksymalną liczbę ze względu na terminal, chyba 1-6 <<<<<<<<<<<< to do
+    no_players = int(input("Please enter the number of players: "))
     players_objs = Player.get_players(no_players)
     # create game
-    game = Game()
+    data_dictionary = {}
+    game = Game(data_dictionary)
     # create dictionary for table scores input
-    data_dictionary = game.create_data_dictionary(players_objs)
+    # data_dictionary = game.create_dictionary_data(players_objs)
+    game.data_dictionary = game.create_data_dictionary(players_objs)
+    print(game.data_dictionary, "game.data_dictionary when game created")
 
     print(f"Round: {game.round}")
     # game 
@@ -288,14 +306,11 @@ def play():
                     # put back dice for next roll
                     if selected == []:
                         print(Terminal.output(roll_result, selected))
-                        print("All dice ready to roll")
+                        print("---------->>> All dice ready to roll! <<<----------" +"\n")
                         
                     else:
                         selected = players_objs[x].put_back_dice(roll_result, selected)
                         print(f"{selected} selected {roll_result} roll result # after put_back function in play()")
-
-                        # roll_result += put_back_list
-                        # selected -= put_back_list
                         print(Terminal.output(roll_result, selected))
 
                     pass
@@ -304,7 +319,8 @@ def play():
                     rolls = 3
                     break
                 elif what_next == '4':
-                    print(game.print_table(no_players, data_dictionary))
+                    #print(game.print_table(no_players, data_dictionary))
+                    print(game.print_table(no_players, game.data_dictionary))
                     pass
                 elif what_next == "5":
                     # roll
