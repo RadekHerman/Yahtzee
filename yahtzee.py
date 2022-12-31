@@ -149,36 +149,54 @@ class Game():
         player_table_values = self.check_table_if_no_score(player_name)
         print(player_table_values, "player values")
 
-        # print(player_name, all_current_dice)
+        current_scoring = []
         if 1 in all_current_dice:
             score = 1 * all_current_dice.count(1)
-            print(f"Aces score: {score}")
+            if "Aces" in player_table_values:
+                current_scoring.append(f"Aces score: {score}")
+                print(f"Aces score: {score}")
+            
         if 2 in all_current_dice:
             score = 2 * all_current_dice.count(2)
-            print(f"Twos score: {score}")
+            if "Twos" in player_table_values:
+                current_scoring.append(f"Twos score: {score}")            
+                print(f"Twos score: {score}")
         if 3 in all_current_dice:
             score = 3 * all_current_dice.count(3)
-            print(f"Threes score: {score}")
+            if "Threes" in player_table_values:
+                current_scoring.append(f"Threes score: {score}")            
+                print(f"Threes score: {score}")
         if 4 in all_current_dice:
             score = 4 * all_current_dice.count(4)
-            print(f"Fours score: {score}")
+            if "Fours" in player_table_values:
+                current_scoring.append(f"Fours score: {score}")            
+                print(f"Fours score: {score}")
         if 5 in all_current_dice:
             score = 5 * all_current_dice.count(5)
-            print(f"Fives score: {score}")
+            if "Fives" in player_table_values:
+                current_scoring.append(f"Fives score: {score}")            
+                print(f"Fives score: {score}")
         if 6 in all_current_dice:
             score = 6 * all_current_dice.count(6)
-            print(f"Sixes score: {score}")
+            if "Sixes" in player_table_values:
+                current_scoring.append(f"Sixes score: {score}")                
+                print(f"Sixes score: {score}")
 
         # Three Of A Kind
         for x in all_current_dice:
             if all_current_dice.count(x) >= 3:
-                print(f"Three of kind: {sum(all_current_dice)}")
-                break
+                if "Three Of A Kind" in player_table_values:
+                    current_scoring.append(f"Three Of A Kind: {sum(all_current_dice)}")
+                    print(f"Three of kind: {sum(all_current_dice)}")
+                    break
+
         # Four Of A Kind
         for x in all_current_dice:
             if all_current_dice.count(x) >= 4:
-                print(f"Four of kind: {sum(all_current_dice)}")
-                break
+                if "Four Of A Kind" in player_table_values:
+                    current_scoring.append(f"Four Of A Kind: {sum(all_current_dice)}")
+                    print(f"Four of kind: {sum(all_current_dice)}")
+                    break
 
         # Full House
         full_house=[]
@@ -194,27 +212,40 @@ class Game():
                         for y in range(2):
                             full_house_check.remove(x)               
         if len(full_house) == 2:
-            print(f"Full House: 25 score")
+            if "Full House" in player_table_values:
+                current_scoring.append(f"Full House: 25 score")
+                print(f"Full House: 25 score")
 
 
         # Small Straight
         # (1-2-3-4, 2-3-4-5, or 3-4-5-6)
         if(all(x in all_current_dice for x in [1,2,3,4])) or (all(x in all_current_dice for x in [2,3,4,5])) or (all(x in all_current_dice for x in [3,4,5,6])):
-            print(f"Small Straight: 30 score")
+            if "Small Straight" in player_table_values:
+                current_scoring.append(f"Small Straight: 30 score")
+                print(f"Small Straight: 30 score")
 
         # Large Straight
         # (1-2-3-4-5 or 2-3-4-5-6)
         if(all(x in all_current_dice for x in [1,2,3,4,5])) or (all(x in all_current_dice for x in [2,3,4,5,6])):
-            print(f"Large Straight: 40 score")
+            if "Large Straight" in player_table_values:
+                current_scoring.append(f"Large Straight: 40 score")
+                print(f"Large Straight: 40 score")
 
         # Yahtzee
         for x in all_current_dice:
             if all_current_dice.count(x) == 5:
-                print(f"Yahtzee: 50 points")
-                break
+                if "Yahtzee" in player_table_values:
+                    current_scoring.append(f"Yahtzee: 50 points")
+                    print(f"Yahtzee: 50 points")
+                    break
 
         # Chance
-        print(f"Chance: {sum(all_current_dice)}")
+        if "Chance" in player_table_values:
+            current_scoring.append(f"Chance: {sum(all_current_dice)}")
+            print(f"Chance: {sum(all_current_dice)}")
+
+        print(current_scoring, "current_scoring list")
+        return "\n".join(current_scoring)
 
         
 class Terminal():
