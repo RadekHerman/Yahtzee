@@ -57,7 +57,6 @@ class Player():
         return roll
                 
 
-
 class Game():
     def __init__(self):
         # number of rounds (będzie potrzebny update)
@@ -92,14 +91,12 @@ class Game():
         return data
 
     def print_table(self,no_players, data_dictionary):
-        table = []
-        
+        table = []     
         row_format ="{:>15}" * (no_players + 1)
         table.append("-"*((no_players * 17)+ 20))
         for key, value in data_dictionary.items():
             table.append(row_format.format(key, *value))
             table.append("-"*((no_players * 17)+ 20))
-
         return "\n".join(table)
 
         
@@ -107,8 +104,74 @@ class Game():
         
         pass
 
-    def check_table(self):
+    def check_table_if_no_score(self):
         pass
+
+    def check_current_scoring(self, player_name, all_current_dice):
+        # print(player_name, all_current_dice)
+        if 1 in all_current_dice:
+            score = 1 * all_current_dice.count(1)
+            print(f"Aces score: {score}")
+        if 2 in all_current_dice:
+            score = 2 * all_current_dice.count(2)
+            print(f"Twos score: {score}")
+        if 3 in all_current_dice:
+            score = 3 * all_current_dice.count(3)
+            print(f"Threes score: {score}")
+        if 4 in all_current_dice:
+            score = 4 * all_current_dice.count(4)
+            print(f"Fours score: {score}")
+        if 5 in all_current_dice:
+            score = 5 * all_current_dice.count(5)
+            print(f"Fives score: {score}")
+        if 6 in all_current_dice:
+            score = 6 * all_current_dice.count(6)
+            print(f"Sixes score: {score}")
+
+        # Three Of A Kind
+        for x in all_current_dice:
+            if all_current_dice.count(x) >= 3:
+                print(f"Three of kind: {sum(all_current_dice)}")
+                break
+        # Four Of A Kind
+        for x in all_current_dice:
+            if all_current_dice.count(x) >= 4:
+                print(f"Four of kind: {sum(all_current_dice)}")
+                break
+
+        # Full House
+        full_house=[]
+        for x in all_current_dice:
+            if all_current_dice.count(x) == 3:
+                full_house.append(x)              
+            if all_current_dice.count(x) == 2:
+                full_house.append(x)
+        if len(set(full_house)) == 2:
+            print(f"Full House: 25 score")
+
+        # Small Straight
+        # (1-2-3-4, 2-3-4-5, or 3-4-5-6)
+        if(all(x in all_current_dice for x in [1,2,3,4])) or (all(x in all_current_dice for x in [2,3,4,5])) or (all(x in all_current_dice for x in [3,4,5,6])):
+            print(f"Small Straight: 30 score")
+
+        # Large Straight
+        # (1-2-3-4-5 or 2-3-4-5-6)
+        if(all(x in all_current_dice for x in [1,2,3,4,5])) or (all(x in all_current_dice for x in [2,3,4,5,6])):
+            print(f"Large Straight: 40 score")
+
+
+        # Yahtzee
+        for x in all_current_dice:
+            if all_current_dice.count(x) == 5:
+                print(f"Yahtzee: 50 points")
+                break
+
+        # Chance
+        print(f"Chance: {sum(all_current_dice)}")
+
+        
+            
+
     
 class Terminal():
     # class will print all results in terminal
@@ -132,6 +195,7 @@ class Terminal():
             rows.append(row_string)
         return "\n".join(rows)
         
+
     # full terminal output
     @classmethod
     def output(cls, roll, selected_dice=None):
@@ -141,7 +205,9 @@ class Terminal():
         roll_row = cls.dice_output(roll)
         # create dice view of selected dice
         selected_row = cls.dice_output(selected_dice)
-
+        # all_current_dice = roll + selected_dice
+        # current_scoring = game.check_current_scoring(all_current_dice)
+        # print(roll, "ROLL", selected_dice, "SELECTED DICE")
         # return full terminal output
         return cls.result_header + roll_row + cls.selection_header + selected_row 
 
@@ -167,6 +233,9 @@ def play():
         roll_result = players_objs[x].get_roll(players_objs[x].dice_number)
         # print roll results
         print(Terminal.output(roll_result))
+        all_current_dice = roll_result + selected
+        print(game.check_current_scoring(players_objs[x].name, all_current_dice))
+        # print(all_current_dice, "TOTAL")
         # what you want to do next
         while rolls < 3:
             while True:
@@ -175,9 +244,14 @@ def play():
                     # select dice to keep from the roll    
                         selected += players_objs[x].select_dice(roll_result)
                         print(Terminal.output(roll_result, selected))
+                        all_current_dice = roll_result + selected
+                        print(game.check_current_scoring(players_objs[x].name, all_current_dice))
                         input(f"To roll dice, press any key.")
                         roll_result = players_objs[x].get_roll(players_objs[x].dice_number)
                         print(Terminal.output(roll_result, selected))
+                        all_current_dice = roll_result + selected
+                        print(game.check_current_scoring(players_objs[x].name, all_current_dice))
+                        print(all_current_dice, "TOTAL")
                         break
                 elif what_next == "2":
                     rolls = 3
