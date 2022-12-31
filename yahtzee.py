@@ -63,16 +63,44 @@ class Game():
         # number of rounds (będzie potrzebny update)
         self.round = 1
     
-# 
+    def create_data_dictionary(self, players_objs):
+        names = []
+        for x in range(len(players_objs)):
+            names.append(players_objs[x].name)
 
-    def print_table(self, players):
-        pass
+        data = {"Category": [], "Aces":[], "Twos":[], "Threes":[], 
+        "Fours":[], "Fives":[], "Sixes":[], "Three Of A Kind":[], 
+        "Four Of A Kind":[], "Full House":[], "Small Straight":[], 
+        "Large Straight":[], "Yahtzee":[], "Chance":[]}
 
-    def create_table():
-        # use dictionary?
-        # create headers list "Category", and names of players 
-        # headers = []
-        pass
+        for name in names:
+            data["Category"].append(name)
+            data["Aces"].append("-")
+            data["Twos"].append("-")
+            data["Threes"].append("-")
+            data["Fours"].append("-")
+            data["Fives"].append("-")
+            data["Sixes"].append("-")
+            data["Three Of A Kind"].append("-")
+            data["Four Of A Kind"].append("-")
+            data["Full House"].append("-")
+            data["Small Straight"].append("-")
+            data["Large Straight"].append("-")
+            data["Yahtzee"].append("-")
+            data["Chance"].append("-")
+
+        return data
+
+    def print_table(self,no_players, data_dictionary):
+        table = []
+        
+        row_format ="{:>15}" * (no_players + 1)
+        table.append("-"*((no_players * 17)+ 20))
+        for key, value in data_dictionary.items():
+            table.append(row_format.format(key, *value))
+            table.append("-"*((no_players * 17)+ 20))
+
+        return "\n".join(table)
 
         
     def update_table(self):
@@ -113,9 +141,6 @@ class Terminal():
         roll_row = cls.dice_output(roll)
         # create dice view of selected dice
         selected_row = cls.dice_output(selected_dice)
-        
-        # add score choices for table 
-        # add view table option
 
         # return full terminal output
         return cls.result_header + roll_row + cls.selection_header + selected_row 
@@ -127,6 +152,8 @@ def play():
     players_objs = Player.get_players(no_players)
     # create game
     game = Game()
+    data_dictionary = game.create_data_dictionary(players_objs)
+
     print(f"Round: {game.round}")
     # game 
         # get roll
@@ -143,7 +170,7 @@ def play():
         # what you want to do next
         while rolls < 3:
             while True:
-                what_next = input("Select dice to keep & roll(1) or choose the score(2): ") 
+                what_next = input("Select dice to keep & roll(1) or choose the score(2) or print current table(3): ") 
                 if what_next == "1":
                     # select dice to keep from the roll    
                         selected += players_objs[x].select_dice(roll_result)
@@ -155,6 +182,9 @@ def play():
                 elif what_next == "2":
                     rolls = 3
                     break
+                elif what_next == '3':
+                    print(game.print_table(no_players, data_dictionary))
+                    pass
                 else:
                     pass
             rolls += 1
