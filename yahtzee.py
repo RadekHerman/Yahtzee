@@ -45,7 +45,30 @@ class Player():
         # update dice number for next roll
         self.dice_number = self.dice_number - len(selected)
         # print(self.dice_number, "liczba pozostałych")
-        return(selected)
+        return selected
+
+    
+    def put_back_dice(self, roll_result, selected=None):
+        # if selected == None or selected == selected == []:
+        #     return "All dice ready to roll" 
+
+        print(f"please select dice you want to put back for next roll, use comma: {selected}")
+        put_back_string = input("..: ").strip()
+        # select only from those that are currently to keep, ignore other inputs
+        put_back_list = []
+        for x in put_back_string.split(","):
+            if x.strip() in ["1", "2", "3", "4", "5", "6"]:
+                x = int(x.strip())
+                if x in selected:
+                    selected.remove(x)
+                    roll_result.append(x)
+                    
+
+            else:
+                pass
+        # update dice number for next roll
+        self.dice_number = 5 - len(selected)
+        return selected
 
     
     # dice roll, number of dices
@@ -140,15 +163,30 @@ class Game():
                 print(f"Four of kind: {sum(all_current_dice)}")
                 break
 
-        # Full House
+        # Full House ### BŁĄD
         full_house=[]
-        for x in all_current_dice:
-            if all_current_dice.count(x) == 3:
-                full_house.append(x)              
-            if all_current_dice.count(x) == 2:
+        full_house_check = all_current_dice.copy()
+        for x in full_house_check:
+            if full_house_check.count(x) == 3:
                 full_house.append(x)
-        if len(set(full_house)) == 2:
+                for y in range(3):
+                    full_house_check.remove(x)          
+            if full_house_check.count(x) == 2:
+                full_house.append(x)
+                for y in range(2):
+                    full_house_check.remove(x) 
+        if len(full_house) == 2:
             print(f"Full House: 25 score")
+
+        #  # Full House
+        # full_house=[]
+        # for x in all_current_dice:
+        #     if all_current_dice.count(x) == 3:
+        #         full_house.append(x)          
+        #     if all_current_dice.count(x) == 2:
+        #         full_house.append(x)
+        # if len(set(full_house)) == 2:
+        #     print(f"Full House: 25 score")
 
         # Small Straight
         # (1-2-3-4, 2-3-4-5, or 3-4-5-6)
@@ -160,7 +198,6 @@ class Game():
         if(all(x in all_current_dice for x in [1,2,3,4,5])) or (all(x in all_current_dice for x in [2,3,4,5,6])):
             print(f"Large Straight: 40 score")
 
-
         # Yahtzee
         for x in all_current_dice:
             if all_current_dice.count(x) == 5:
@@ -171,9 +208,6 @@ class Game():
         print(f"Chance: {sum(all_current_dice)}")
 
         
-            
-
-    
 class Terminal():
     # class will print all results in terminal
     result_header = " ROLL RESULT / DICE TO ROLL".center(60, "~") + "\n"
@@ -219,6 +253,7 @@ def play():
     players_objs = Player.get_players(no_players)
     # create game
     game = Game()
+    # create dictionary for table scores input
     data_dictionary = game.create_data_dictionary(players_objs)
 
     print(f"Round: {game.round}")
@@ -226,6 +261,7 @@ def play():
         # get roll
     for x in range(no_players):
         selected = []
+        # number of dive to roll
         players_objs[x].dice_number = 5
         # FIRST ROLL
         rolls = 1
@@ -244,6 +280,7 @@ def play():
                 if what_next == "1":
                     # select dice to keep from the roll    
                     selected += players_objs[x].select_dice(roll_result)
+                    print(f"{selected} selected {roll_result} roll result # after select_dice function in play()")
                     # print in terminal dice to roll and selected ones
                     print(Terminal.output(roll_result, selected))
                     # check current scoring based on all current dice
@@ -253,6 +290,17 @@ def play():
 
                 elif what_next == "2":
                     # put back dice for next roll
+                    if selected == []:
+                        print(Terminal.output(roll_result, selected))
+                        print("All dice ready to roll")
+                        
+                    else:
+                        selected = players_objs[x].put_back_dice(roll_result, selected)
+                        print(f"{selected} selected {roll_result} roll result # after put_back function in play()")
+
+                        # roll_result += put_back_list
+                        # selected -= put_back_list
+                        print(Terminal.output(roll_result, selected))
 
                     pass
                 elif what_next == "3":
