@@ -1,4 +1,6 @@
 import random
+import time
+import os
 from dice_images import dice_img
 
 class Player():
@@ -77,6 +79,7 @@ class Player():
         roll = []
         for dice in range(dice_number):
             dice = random.randint(1, 6)
+            time.sleep(0.2)
             roll.append(dice)        
         return roll
                 
@@ -132,6 +135,7 @@ class Game():
         pass
 
     def check_current_scoring(self, player_name, all_current_dice):
+  
         # print(player_name, all_current_dice)
         if 1 in all_current_dice:
             score = 1 * all_current_dice.count(1)
@@ -163,30 +167,22 @@ class Game():
                 print(f"Four of kind: {sum(all_current_dice)}")
                 break
 
-        # Full House ### BŁĄD
+        # Full House
         full_house=[]
         full_house_check = all_current_dice.copy()
-        for x in full_house_check:
+        for x in full_house_check:        
             if full_house_check.count(x) == 3:
                 full_house.append(x)
                 for y in range(3):
-                    full_house_check.remove(x)          
-            if full_house_check.count(x) == 2:
-                full_house.append(x)
-                for y in range(2):
-                    full_house_check.remove(x) 
+                    full_house_check.remove(x)
+                for x in full_house_check:
+                    if full_house_check.count(x) == 2:
+                        full_house.append(x)
+                        for y in range(2):
+                            full_house_check.remove(x)               
         if len(full_house) == 2:
             print(f"Full House: 25 score")
 
-        #  # Full House
-        # full_house=[]
-        # for x in all_current_dice:
-        #     if all_current_dice.count(x) == 3:
-        #         full_house.append(x)          
-        #     if all_current_dice.count(x) == 2:
-        #         full_house.append(x)
-        # if len(set(full_house)) == 2:
-        #     print(f"Full House: 25 score")
 
         # Small Straight
         # (1-2-3-4, 2-3-4-5, or 3-4-5-6)
