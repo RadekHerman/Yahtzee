@@ -142,20 +142,21 @@ class Game():
         print(player_name, "player name form check")
         player_table_values=[]
         index_name = self.data_dictionary["Category"].index(player_name)
-        #print(self.data_dictionary.keys())
         for key, value in self.data_dictionary.items():
-            #print(value[index_name])
             if value[index_name] == "-":
                 player_table_values.append(key)
         
         return player_table_values
-        
+
 
     def check_current_scoring(self, player_name, all_current_dice):
-        
+        # all_current_dice = [1,1,1,1,1]
+        # print(all_current_dice)
+        # check what categories have yet no score in the table
         player_table_values = self.check_table_if_no_score(player_name)
         print(player_table_values, "player values")
 
+        # check the possible scoring from the current roll result   
         current_scoring = []
         if 1 in all_current_dice:
             score = 1 * all_current_dice.count(1)
@@ -251,9 +252,16 @@ class Game():
             current_scoring.append(f"Chance: {sum(all_current_dice)} points")
             #print(f"Chance: {sum(all_current_dice)}")
 
-        #print(current_scoring, "current_scoring list")
-        #return "\n".join(current_scoring)
-        return current_scoring
+        # return list of available score options
+        if len(current_scoring) >= 1:
+            return current_scoring
+        # if you don't have any available category from the roll you have to choose other with 0 points. 
+        else:
+            for x in player_table_values:
+                current_scoring.append(f"{x}: 0 points")
+
+            return current_scoring
+
 
         
 class Terminal():
