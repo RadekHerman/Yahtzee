@@ -127,9 +127,17 @@ class Game():
         return "\n".join(table)
 
         
-    def update_table(self):
-        
-        pass
+    def update_table(self, player_name, key, value):
+        # update data
+        # check index of the player
+        index_name = self.data_dictionary["Category"].index(player_name)
+        print(index_name)
+        #print(self.data_dictionary[key][index_name])
+        # print(self.data_dictionary["Aces"][index_name])
+        # use index to update data
+        self.data_dictionary[key][index_name] = value
+        print(self.data_dictionary[key][index_name])
+                
 
     def check_table_if_no_score(self, player_name):
         print(player_name, "player name form check")
@@ -244,7 +252,7 @@ class Game():
             current_scoring.append(f"Chance: {sum(all_current_dice)}")
             print(f"Chance: {sum(all_current_dice)}")
 
-        print(current_scoring, "current_scoring list")
+        #print(current_scoring, "current_scoring list")
         return "\n".join(current_scoring)
 
         
@@ -330,6 +338,7 @@ def play():
                     print(Terminal.output(roll_result, selected))
                     # check current scoring based on all current dice
                     all_current_dice = roll_result + selected
+                    print("current scoring from play()")
                     print(game.check_current_scoring(players_objs[x].name, all_current_dice))
                     pass
 
@@ -368,7 +377,10 @@ def play():
             rolls += 1
         
         print("Choose score for the table")
-        
+        key = input("input key")
+        value = input("value")
+        game.update_table(players_objs[x].name, key, value)
+        print(game.print_table(no_players, game.data_dictionary))
 
 
 
