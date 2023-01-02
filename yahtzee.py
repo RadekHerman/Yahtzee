@@ -8,6 +8,7 @@ class Player():
     def __init__(self, name):
         self.name = name
         self.dice_number = 0
+        self.bonus = False
 
     # number of dice to roll getter and setter
     @property
@@ -143,32 +144,47 @@ class Game():
                 
     def check_upper_section(self, player_name):
         upper_category = ["Aces", "Twos", "Threes", "Fours", "Fives", "Sixes"]
-        for i in upper_category:
-            print(i, "i")
         upper_sum = 0
         scored_category = []
         # if upper sum >= 63
         upper_bonus = 35
         index_name = self.data_dictionary["Category"].index(player_name)
-        for cat in upper_category:
-            print(cat, "category for loop")
-            if self.data_dictionary[cat][index_name] != "-":
-                print(self.data_dictionary[cat][index_name], "value int for category")
-                upper_sum += self.data_dictionary[cat][index_name]
+        for category in upper_category:
+            print(category, "category for loop")
+            if self.data_dictionary[category][index_name] != "-":
+                print(self.data_dictionary[category][index_name], "value int for category")
+                upper_sum += self.data_dictionary[category][index_name]
                 print(upper_sum, "upper sum after addition")
                 
-                scored_category.append(cat)
+                scored_category.append(category)
                 print(upper_category, "upper category after remove")
         
         if len(scored_category) == 6:
             self.update_table(player_name, "Sum", upper_sum)
             if upper_sum >= 63:
                 self.update_table(player_name, "Bonus", upper_bonus)
+            else:
+                self.update_table(player_name, "Bonus", 0)   
+            
+            return True
+
+        return False
 
     def sum_up_total(self, player_name):
-        pass
-            
+        lower_sum = 0
+        index_name = self.data_dictionary["Category"].index(player_name)
+        upper_sum = self.data_dictionary["Sum"][index_name]
+        bonus = self.data_dictionary["Bonus"][index_name]
+        lower_category = ["Three Of A Kind", "Four Of A Kind", "Full House", "Small Straight", "Large Straight", "Yahtzee", "Chance"]
+        for category in lower_category:
+            print(category, "lower category loop")
+            print(self.data_dictionary[category][index_name], "value int for category")
+            lower_sum += self.data_dictionary[category][index_name]
+            print(lower_sum, "upper sum after addition")
 
+        total_sum = upper_sum + bonus + lower_sum 
+        self.update_table(player_name, "TOTAL SUM", total_sum)
+        return upper_sum + bonus + lower_sum     
 
 
     def check_table_if_no_score(self, player_name):
@@ -357,9 +373,12 @@ def play():
     # create dictionary for table scores input
     # data_dictionary = game.create_dictionary_data(players_objs)
     game.data_dictionary = game.create_data_dictionary(players_objs)
+
+    game.data_dictionary = {'Category': ['rad', 'ula', 'rosa'], 'Aces': [ 1, 1, 1], 'Twos': [2, 2, 2], 'Threes': [3, 3, 3], 'Fours': [4, 4, 4], 'Fives': [5, 5, 5], 'Sixes': ['-', '-', '-'], 'Sum': [' ', ' ', ' '], 'Bonus' :[' ', ' ', ' '], 'Three Of A Kind': [7, 7, 7], 'Four Of A Kind': [8, 8, 8], 'Full House': [9, 9, 9], 'Small Straight': [10, 10, 10], 'Large Straight': [11, 11, 11], 'Yahtzee': [12, 12, 12], 'Chance': ['-', '-', '-'], 'TOTAL SUM': [' ', ' ', ' ']}
+
     #print(game.data_dictionary, "game.data_dictionary when game created")
     os.system('clear')
-    game_round = 1
+    game_round = 12
     
     # game 
     while game_round <= 13:
@@ -454,11 +473,21 @@ def play():
             print(value)
 
             game.update_table(players_objs[x].name, key, value)
-            # check bonus 
-            game.check_upper_section(players_objs[x].name)
+            # check bonus
+            print(players_objs[x].bonus, "true or false")
+            if players_objs[x].bonus == False:
+                players_objs[x].bonus = game.check_upper_section(players_objs[x].name)
+            
+            if game_round == 13:
+                game.sum_up_total(players_objs[x].name)
+            
             print(game.print_table(no_players, game.data_dictionary))
+
         game_round += 1
 
+    print(game.print_table(no_players, game.data_dictionary))
+
+    print(game.check_winner(no_players, players_objs))
 
 if __name__ == '__main__':
     play()
