@@ -197,6 +197,17 @@ class Game():
         
         return player_table_values
 
+    def check_winner(self, no_players, players_objs):
+        players_total_score = {}
+        for x in range(no_players):
+            index_name = self.data_dictionary["Category"].index(players_objs[x].name)
+            players_total_score[players_objs[x].name] = self.data_dictionary["TOTAL SUM"][index_name]
+
+        top_score = max(players_total_score.values())
+        top_player = max(players_total_score, key=players_total_score.get)
+
+        return f"The Winner is: {top_player} with the score {top_score} points."
+
 
     def check_current_scoring(self, player_name, all_current_dice):
         # all_current_dice = [1,1,1,1,1]
