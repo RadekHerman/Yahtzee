@@ -20,12 +20,19 @@ class Player():
         self._dice_number = n
 
     # create players function
-    # nazwy graczy powinny być różne <<<<<<<<<<<<<<<<<< to do
     def get_players(no_players):
-        players_names=[]    
+        players_names=[]
         for player in range(1, no_players+1):
-            name = input(f"Please enter {player} player name.: ")
+            name = input(f"Please enter player no. {player} name.: ")
+            while True:
+                if name in players_names:
+                    print("This name has been already taken by another player.")
+                    name = input(f"Please enter another name for player no. {player}.: ")
+                    continue
+                else:
+                    break
             players_names.append(name)
+
         players_objs = []
         # create player instances and keep them in players_objs
         for i in players_names:
@@ -36,7 +43,7 @@ class Player():
     def select_dice(self, roll_result, selected=None):
         if selected == None:
             selected = []
-        print(f"please select dice you want to keep, use comma: {roll_result}")
+        print(f"Please select dice you want to keep, use comma: {roll_result}")
         selected_string = input("..: ").strip()
         # select only from those that have been rolled, ignore other inputs
         for x in selected_string.split(","):
@@ -385,11 +392,11 @@ def play():
     # data_dictionary = game.create_dictionary_data(players_objs)
     game.data_dictionary = game.create_data_dictionary(players_objs)
 
-    game.data_dictionary = {'Category': ['rad', 'ula', 'rosa'], 'Aces': [ 1, 1, 1], 'Twos': [2, 2, 2], 'Threes': [3, 3, 3], 'Fours': [4, 4, 4], 'Fives': [5, 5, 5], 'Sixes': ['-', '-', '-'], 'Sum': [' ', ' ', ' '], 'Bonus' :[' ', ' ', ' '], 'Three Of A Kind': [7, 7, 7], 'Four Of A Kind': [8, 8, 8], 'Full House': [9, 9, 9], 'Small Straight': [10, 10, 10], 'Large Straight': [11, 11, 11], 'Yahtzee': [12, 12, 12], 'Chance': ['-', '-', '-'], 'TOTAL SUM': [' ', ' ', ' ']}
+    # game.data_dictionary = {'Category': ['rad', 'ula', 'rosa'], 'Aces': [ 1, 1, 1], 'Twos': [2, 2, 2], 'Threes': [3, 3, 3], 'Fours': [4, 4, 4], 'Fives': [5, 5, 5], 'Sixes': ['-', '-', '-'], 'Sum': [' ', ' ', ' '], 'Bonus' :[' ', ' ', ' '], 'Three Of A Kind': [7, 7, 7], 'Four Of A Kind': [8, 8, 8], 'Full House': [9, 9, 9], 'Small Straight': [10, 10, 10], 'Large Straight': [11, 11, 11], 'Yahtzee': [12, 12, 12], 'Chance': ['-', '-', '-'], 'TOTAL SUM': [' ', ' ', ' ']}
 
     #print(game.data_dictionary, "game.data_dictionary when game created")
     os.system('clear')
-    game_round = 12
+    game_round = 1
     
     # game 
     while game_round <= 13:
