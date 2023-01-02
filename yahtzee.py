@@ -358,12 +358,12 @@ class Terminal():
 
     # full terminal output
     @classmethod
-    def output(cls, roll, selected_dice=None, current_scoring=None):
+    def output(cls, roll_result, selected_dice=None, current_scoring=None):
         if selected_dice == None:
-            selected_dice = []
+            selected_dice = []  
         current_scoring_list = []
         # create dice view of result 
-        roll_row = cls.dice_output(roll)
+        roll_row = cls.dice_output(roll_result)
         # create dice view of selected dice
         selected_row = cls.dice_output(selected_dice)
         # all_current_dice = roll + selected_dice
@@ -422,11 +422,8 @@ def play():
             print(f"{players_objs[x].name}'s turn")
             input(f"To roll the dice, press any key.")
             roll_result = players_objs[x].get_roll(players_objs[x].dice_number)
-            # print roll results
-            
 
-            # what you want to do next
-            while rolls < 3:
+            while rolls == 3:
                 while True:
                     os.system('clear')
                     print(f"Round: {game_round}")
@@ -440,91 +437,35 @@ def play():
                     for index, scoring in enumerate(current_scoring, start=1):
                         print(f"{index}. {scoring}")
                     print("\n" + " SELECT YOUR NEXT MOVE  ".center(60, "~") + "\n")
-
-
-
-                    # what_next = input("Select dice to keep (1) or put back dice for next roll(2) or choose the score(3) or print current table(4) or roll the dice(5): ")
-                    #os.system('clear')
-                    #print(Terminal.whats_next())
-                    #print("\n" + " SELECT YOUR NEXT MOVE  ".center(60, "~") + "\n")
                     what_next = input("Please choose a number (1) Keep, (2) Put Back, (3) Score, (4) Table or (5) Roll: ")
 
                     if what_next == "1":
                         # select dice to keep from the roll    
                         selected += players_objs[x].select_dice(roll_result)
-                        #print(f"{selected} selected {roll_result} roll result # after select_dice function in play()")
-                        # print in terminal dice to roll and selected ones
-                        os.system('clear')
-                        print(f"Round: {game_round}")
-                        print(f"{players_objs[x].name}'s turn")
-                        print(Terminal.output(roll_result, selected))
-                        # check current scoring based on all current dice
-                        all_current_dice = roll_result + selected
-                        #print("current scoring from play()")
-                        #print(game.check_current_scoring(players_objs[x].name, all_current_dice))
-                        current_scoring = game.check_current_scoring(players_objs[x].name, all_current_dice)
-                        for index, scoring in enumerate(current_scoring, start=1):
-                            print(f"{index}. {scoring}")
-                        print("\n" + " SELECT YOUR NEXT MOVE  ".center(60, "~") + "\n")
                         pass
 
                     elif what_next == "2":
                         # put back dice for next roll
                         if selected == []:
-                            os.system('clear')
-                            print(f"Round: {game_round}")
-                            print(f"{players_objs[x].name}'s turn")
-                            print(Terminal.output(roll_result, selected))
-                            all_current_dice = roll_result + selected
-                            current_scoring = game.check_current_scoring(players_objs[x].name, all_current_dice)
-                            for index, scoring in enumerate(current_scoring, start=1):
-                                print(f"{index}. {scoring}")
-                            
                             print("\n---------->>> All dice ready to roll! <<<----------" +"\n")
-                            
-                            #print("\n" + " SELECT YOUR NEXT MOVE  ".center(60, "~") + "\n")
-                            
+                            input("\nPress any key to continue.")
                         else:
                             selected = players_objs[x].put_back_dice(roll_result, selected)
-                            #print(f"{selected} selected {roll_result} roll result # after put_back function in play()")
-                            os.system('clear')
-                            print(f"Round: {game_round}")
-                            print(f"{players_objs[x].name}'s turn")
-                            print(Terminal.output(roll_result, selected))
-                            all_current_dice = roll_result + selected
-                            current_scoring = game.check_current_scoring(players_objs[x].name, all_current_dice)
-                            for index, scoring in enumerate(current_scoring, start=1):
-                                print(f"{index}. {scoring}")
-                            
-                            print("\n" + " SELECT YOUR NEXT MOVE  ".center(60, "~") + "\n")
-
                         pass
+
                     elif what_next == "3":
-                        # choose the score(3)
+                        # choose the score
                         rolls = 3
                         break
                     elif what_next == '4':
-                        #print(game.print_table(no_players, data_dictionary))
+                        #print table
                         os.system('clear')
                         print(game.print_table(no_players, game.data_dictionary))
                         input("Press any key to continue.")
                         pass
                     elif what_next == "5":
-                        # roll
-                        # enter for next roll
-                        #input(f"To roll dice, press any key.")
+                        # roll    
                         roll_result = players_objs[x].get_roll(players_objs[x].dice_number)
-                        os.system('clear')
-                        print(f"Round: {game_round}")
-                        print(f"{players_objs[x].name}'s turn")
-                        print(Terminal.output(roll_result, selected))
-                        all_current_dice = roll_result + selected
-                        #print(game.check_current_scoring(players_objs[x].name, all_current_dice))
-                        #print(all_current_dice, "TOTAL")
-                        current_scoring = game.check_current_scoring(players_objs[x].name, all_current_dice)
-                        for index, scoring in enumerate(current_scoring, start=1):
-                            print(f"{index}. {scoring}")
-                        print("\n" + " SELECT YOUR NEXT MOVE  ".center(60, "~") + "\n")
                         break
                     else:
                         pass
@@ -546,19 +487,12 @@ def play():
             os.system('clear')
             print(f"Round: {game_round}")
             print(f"{players_objs[x].name}'s turn")
-
-            
             # get key and value for table
             key_value_for_table = re.match(r"(^.+)(:\s)(\d+)(\s.*)$", current_scoring[score_selection])
             key = key_value_for_table.group(1)
             value = int(key_value_for_table.group(3))
-
-            # print(key)
-            # print(value)
-
             game.update_table(players_objs[x].name, key, value)
             # check bonus
-            #print(players_objs[x].bonus, "true or false")
             if players_objs[x].bonus == False:
                 players_objs[x].bonus = game.check_upper_section(players_objs[x].name)
             
