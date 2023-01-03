@@ -481,16 +481,26 @@ def play():
             
             #print("\n"+"Please choose score for the table.")
             #print(current_scoring)
-            os.system('clear')
-            print(f"Round: {game_round}")
-            print(f"{players_objs[x].name}'s turn")
-            print(Terminal.output(roll_result, selected))
-            all_current_dice = roll_result + selected
-            current_scoring = game.check_current_scoring(players_objs[x].name, all_current_dice)
-            for index, scoring in enumerate(current_scoring, start=1):
-                print(f"{index}. {scoring}")
-            score_selection = (int(input("\n"+"Please choose your scoring (use index number).: "))-1)
-            print(f"\nYour choice >>>> {current_scoring[score_selection]} <<<< will be put in the table.")
+            while True:
+                os.system('clear')
+                print(f"Round: {game_round}")
+                print(f"{players_objs[x].name}'s turn")
+                print(Terminal.output(roll_result, selected))
+                all_current_dice = roll_result + selected
+                current_scoring = game.check_current_scoring(players_objs[x].name, all_current_dice)
+                for index, scoring in enumerate(current_scoring, start=1):
+                    print(f"{index}. {scoring}")
+                
+                try:
+                    score_selection = (int(input("\n"+"Please choose your scoring (use index number).: "))-1)
+                except ValueError:
+                    continue
+                else:
+                    if score_selection > 1 and score_selection < len(list(current_scoring)):
+                        break
+                    continue
+
+            print(f"\nYour choice >>>> {current_scoring[score_selection]} <<<< will be put in the table.\n")
             input("Press any key to continue.")
             os.system('clear')
             print(f"Round: {game_round}")
