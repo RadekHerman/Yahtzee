@@ -196,7 +196,7 @@ class Game():
         top_score = max(players_total_score.values())
         top_player = max(players_total_score, key=players_total_score.get)
 
-        return f"The Winner is: {top_player} with the score {top_score} points."
+        return f"\nThe Winner is: {top_player} with the score {top_score} points."
 
 
     def check_current_scoring(self, player_name, all_current_dice):
@@ -365,6 +365,7 @@ def play():
     game = Game(data_dictionary)
     # create dictionary for table scores input
     game.data_dictionary = game.create_data_dictionary(players_objs)
+
     game_round = 1
     
     # game 
@@ -438,6 +439,7 @@ def play():
                 print(Terminal.output(roll_result, selected))
                 all_current_dice = roll_result + selected
                 current_scoring = game.check_current_scoring(players_objs[x].name, all_current_dice)
+                print(len(current_scoring), "current scoring len")
                 for index, scoring in enumerate(current_scoring, start=1):
                     print(f"{index}. {scoring}")
                 try:
@@ -445,7 +447,7 @@ def play():
                 except ValueError:
                     continue
                 else:
-                    if score_selection > 1 and score_selection < len(list(current_scoring)):
+                    if score_selection >= 0 and score_selection < len(current_scoring):
                         break
                     continue
 
@@ -473,8 +475,13 @@ def play():
 
         game_round += 1
 
+    os.system('clear')
     print(game.print_table(no_players, game.data_dictionary))
     print(game.check_winner(no_players, players_objs))
+
+    play_again = input("(Y) to play again.:").upper()
+    if play_again == "Y":
+        play() 
 
 if __name__ == '__main__':
     play()
