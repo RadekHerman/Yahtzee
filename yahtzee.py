@@ -33,10 +33,9 @@ class Player():
                     break
             players_names.append(name)
 
-        players_objs = []
         # create player instances and keep them in players_objs
-        for i in players_names:
-            players_objs.append(Player(i))
+        players_objs = [Player(i) for i in players_names]
+
         return players_objs
 
     # select dice from roll result function
@@ -65,7 +64,6 @@ class Player():
         print(f"Please select dice you want to put back for the next roll, use comma: {selected}")
         put_back_string = input("..: ").strip()
         # select only from those that are currently to keep, ignore other inputs
-        put_back_list = []
         for x in put_back_string.split(","):
             if x.strip() in ["1", "2", "3", "4", "5", "6"]:
                 x = int(x.strip())
@@ -83,7 +81,7 @@ class Player():
         roll = []
         for dice in range(dice_number):
             dice = random.randint(1, 6)
-            time.sleep(0.2)
+            time.sleep(random.uniform(0.05, 0.2))
             roll.append(dice)        
         return roll
                 
@@ -93,9 +91,8 @@ class Game():
         self.data_dictionary = data_dictionary
     
     def create_data_dictionary(self, players_objs):
-        names = []
-        for x in range(len(players_objs)):
-            names.append(players_objs[x].name)
+
+        names = [players_objs[x].name for x in range(len(players_objs))]
 
         self.data_dictionary = {"Category": [], "Aces":[], "Twos":[], "Threes":[], 
         "Fours":[], "Fives":[], "Sixes":[], "Sum":[], "Bonus":[], "Three Of A Kind":[], 
@@ -148,7 +145,6 @@ class Game():
         upper_bonus = 35
         index_name = self.data_dictionary["Category"].index(player_name)
         for category in upper_category:
-
             if self.data_dictionary[category][index_name] != "-":
                 upper_sum += self.data_dictionary[category][index_name]
                 scored_category.append(category)
@@ -159,9 +155,7 @@ class Game():
                 self.update_table(player_name, "Bonus", upper_bonus)
             else:
                 self.update_table(player_name, "Bonus", 0)   
-            
             return True
-
         return False
 
     def sum_up_total(self, player_name):
@@ -300,7 +294,6 @@ class Game():
 
             return current_scoring
 
-
         
 class Terminal():
     # class will print results in terminal
@@ -328,10 +321,9 @@ class Terminal():
 
     # terminal output
     @classmethod
-    def output(cls, roll, selected_dice=None, current_scoring=None):
+    def output(cls, roll, selected_dice=None):
         if selected_dice == None:
             selected_dice = []
-        current_scoring_list = []
         # create dice view of result 
         roll_row = cls.dice_output(roll)
         # create dice view of selected dice
@@ -365,7 +357,6 @@ def play():
     game = Game(data_dictionary)
     # create dictionary for table scores input
     game.data_dictionary = game.create_data_dictionary(players_objs)
-
     game_round = 1
     
     # game 
@@ -382,7 +373,6 @@ def play():
             input(f"To roll the dice, press any key.")
             roll_result = players_objs[x].get_roll(players_objs[x].dice_number)
 
-            # what you want to do next
             while rolls < 3:
                 while True:
                     os.system('clear')
@@ -439,7 +429,6 @@ def play():
                 print(Terminal.output(roll_result, selected))
                 all_current_dice = roll_result + selected
                 current_scoring = game.check_current_scoring(players_objs[x].name, all_current_dice)
-                print(len(current_scoring), "current scoring len")
                 for index, scoring in enumerate(current_scoring, start=1):
                     print(f"{index}. {scoring}")
                 try:
