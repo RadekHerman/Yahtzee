@@ -61,9 +61,7 @@ class Player():
 
     
     def put_back_dice(self, roll_result, selected=None):
-        # if selected == None or selected == selected == []:
         #     return "All dice ready to roll" 
-
         print(f"Please select dice you want to put back for the next roll, use comma: {selected}")
         put_back_string = input("..: ").strip()
         # select only from those that are currently to keep, ignore other inputs
@@ -80,10 +78,8 @@ class Player():
         self.dice_number = 5 - len(selected)
         return selected
 
-    
     # dice roll, number of dice
     def get_roll(self, dice_number):
-        # self.dice_number = dice_number
         roll = []
         for dice in range(dice_number):
             dice = random.randint(1, 6)
@@ -141,14 +137,9 @@ class Game():
         # update data
         # check index of the player
         index_name = self.data_dictionary["Category"].index(player_name)
-        #print(index_name)
-        #print(self.data_dictionary[key][index_name])
-        # print(self.data_dictionary["Aces"][index_name])
         # use index to update data
         self.data_dictionary[key][index_name] = value
-            
-        # print(self.data_dictionary[key][index_name])
-                
+
     def check_upper_section(self, player_name):
         upper_category = ["Aces", "Twos", "Threes", "Fours", "Fives", "Sixes"]
         upper_sum = 0
@@ -157,14 +148,10 @@ class Game():
         upper_bonus = 35
         index_name = self.data_dictionary["Category"].index(player_name)
         for category in upper_category:
-            #print(category, "category for loop")
+
             if self.data_dictionary[category][index_name] != "-":
-                #print(self.data_dictionary[category][index_name], "value int for category")
                 upper_sum += self.data_dictionary[category][index_name]
-                #print(upper_sum, "upper sum after addition")
-                
                 scored_category.append(category)
-                #print(upper_category, "upper category after remove")
         
         if len(scored_category) == 6:
             self.update_table(player_name, "Sum", upper_sum)
@@ -184,10 +171,7 @@ class Game():
         bonus = self.data_dictionary["Bonus"][index_name]
         lower_category = ["Three Of A Kind", "Four Of A Kind", "Full House", "Small Straight", "Large Straight", "Yahtzee", "Chance"]
         for category in lower_category:
-            #print(category, "lower category loop")
-            #print(self.data_dictionary[category][index_name], "value int for category")
             lower_sum += self.data_dictionary[category][index_name]
-            #print(lower_sum, "upper sum after addition")
 
         total_sum = upper_sum + bonus + lower_sum 
         self.update_table(player_name, "TOTAL SUM", total_sum)
@@ -195,7 +179,6 @@ class Game():
 
 
     def check_table_if_no_score(self, player_name):
-        #print(player_name, "player name form check")
         player_table_values=[]
         index_name = self.data_dictionary["Category"].index(player_name)
         for key, value in self.data_dictionary.items():
@@ -217,11 +200,8 @@ class Game():
 
 
     def check_current_scoring(self, player_name, all_current_dice):
-        # all_current_dice = [1,1,1,1,1]
-        # print(all_current_dice)
-        # check what categories have yet no score in the table
+
         player_table_values = self.check_table_if_no_score(player_name)
-        #print(player_table_values, "player values")
 
         # check the possible scoring from the current roll result   
         current_scoring = []
@@ -229,40 +209,37 @@ class Game():
             score = 1 * all_current_dice.count(1)
             if "Aces" in player_table_values:
                 current_scoring.append(f"Aces: {score} points")
-                #print(f"Aces score: {score}")
             
         if 2 in all_current_dice:
             score = 2 * all_current_dice.count(2)
             if "Twos" in player_table_values:
                 current_scoring.append(f"Twos: {score} points")            
-                #print(f"Twos score: {score}")
+
         if 3 in all_current_dice:
             score = 3 * all_current_dice.count(3)
             if "Threes" in player_table_values:
                 current_scoring.append(f"Threes: {score} points")            
-                #print(f"Threes score: {score}")
+
         if 4 in all_current_dice:
             score = 4 * all_current_dice.count(4)
             if "Fours" in player_table_values:
                 current_scoring.append(f"Fours: {score} points")            
-                #print(f"Fours score: {score}")
+
         if 5 in all_current_dice:
             score = 5 * all_current_dice.count(5)
             if "Fives" in player_table_values:
                 current_scoring.append(f"Fives: {score} points")            
-                #print(f"Fives score: {score}")
+
         if 6 in all_current_dice:
             score = 6 * all_current_dice.count(6)
             if "Sixes" in player_table_values:
                 current_scoring.append(f"Sixes: {score} points")                
-                #print(f"Sixes score: {score}")
 
         # Three Of A Kind
         for x in all_current_dice:
             if all_current_dice.count(x) >= 3:
                 if "Three Of A Kind" in player_table_values:
                     current_scoring.append(f"Three Of A Kind: {sum(all_current_dice)} points")
-                    #print(f"Three of kind: {sum(all_current_dice)}")
                     break
 
         # Four Of A Kind
@@ -270,7 +247,6 @@ class Game():
             if all_current_dice.count(x) >= 4:
                 if "Four Of A Kind" in player_table_values:
                     current_scoring.append(f"Four Of A Kind: {sum(all_current_dice)} points")
-                    #print(f"Four of kind: {sum(all_current_dice)}")
                     break
 
         # Full House
@@ -289,8 +265,6 @@ class Game():
         if len(full_house) == 2:
             if "Full House" in player_table_values:
                 current_scoring.append(f"Full House: 25 points")
-                #print(f"Full House: 25 score")
-
 
         # Small Straight
         # (1-2-3-4, 2-3-4-5, or 3-4-5-6)
@@ -304,20 +278,17 @@ class Game():
         if(all(x in all_current_dice for x in [1,2,3,4,5])) or (all(x in all_current_dice for x in [2,3,4,5,6])):
             if "Large Straight" in player_table_values:
                 current_scoring.append(f"Large Straight: 40 points")
-                #print(f"Large Straight: 40 score")
 
         # Yahtzee
         for x in all_current_dice:
             if all_current_dice.count(x) == 5:
                 if "Yahtzee" in player_table_values:
                     current_scoring.append(f"Yahtzee: 50 points")
-                    #print(f"Yahtzee: 50 points")
                     break
 
         # Chance
         if "Chance" in player_table_values:
             current_scoring.append(f"Chance: {sum(all_current_dice)} points")
-            #print(f"Chance: {sum(all_current_dice)}")
 
         # return list of available score options
         if len(current_scoring) >= 1:
@@ -332,11 +303,10 @@ class Game():
 
         
 class Terminal():
-    # class will print all results in terminal
+    # class will print results in terminal
     result_header = " ROLL RESULT / DICE TO ROLL ".center(60, "~") + "\n"
     selection_header = "\n" + " SELECTED DICE TO KEEP ".center(60, "~") + "\n"
     current_scoring_header = "\n" + " CURRENT SCORING ".center(60, "~") + "\n"
-    # menu_selection_header = "\n" + " SELECT YOUR NEXT MOVE  ".center(60, "~") + "\n"
 
     @classmethod
     # create view of dice in terminal
@@ -356,7 +326,7 @@ class Terminal():
         return "\n".join(rows)
         
 
-    # full terminal output
+    # terminal output
     @classmethod
     def output(cls, roll, selected_dice=None, current_scoring=None):
         if selected_dice == None:
@@ -366,12 +336,6 @@ class Terminal():
         roll_row = cls.dice_output(roll)
         # create dice view of selected dice
         selected_row = cls.dice_output(selected_dice)
-        # all_current_dice = roll + selected_dice
-        # current_scoring = game.check_current_scoring(all_current_dice)
-        # print(roll, "ROLL", selected_dice, "SELECTED DICE")
-        # return full terminal output
-        # for index, scoring in enumerate(current_scoring, start=1):
-        #     current_scoring_list.append(index,".", scoring)
         return cls.result_header + roll_row + cls.selection_header + selected_row + cls.current_scoring_header
 
     @staticmethod
@@ -400,13 +364,7 @@ def play():
     data_dictionary = {}
     game = Game(data_dictionary)
     # create dictionary for table scores input
-    # data_dictionary = game.create_dictionary_data(players_objs)
     game.data_dictionary = game.create_data_dictionary(players_objs)
-
-    # game.data_dictionary = {'Category': ['rad', 'ula', 'rosa'], 'Aces': [ 1, 1, 1], 'Twos': [2, 2, 2], 'Threes': [3, 3, 3], 'Fours': [4, 4, 4], 'Fives': [5, 5, 5], 'Sixes': ['-', '-', '-'], 'Sum': [' ', ' ', ' '], 'Bonus' :[' ', ' ', ' '], 'Three Of A Kind': [7, 7, 7], 'Four Of A Kind': [8, 8, 8], 'Full House': [9, 9, 9], 'Small Straight': [10, 10, 10], 'Large Straight': [11, 11, 11], 'Yahtzee': [12, 12, 12], 'Chance': ['-', '-', '-'], 'TOTAL SUM': [' ', ' ', ' ']}
-
-    #print(game.data_dictionary, "game.data_dictionary when game created")
-    #os.system('clear')
     game_round = 1
     
     # game 
@@ -422,8 +380,6 @@ def play():
             print(f"{players_objs[x].name}'s turn")
             input(f"To roll the dice, press any key.")
             roll_result = players_objs[x].get_roll(players_objs[x].dice_number)
-            # print roll results
-            
 
             # what you want to do next
             while rolls < 3:
@@ -435,7 +391,6 @@ def play():
                     # check current scoring based on all current dice
                     all_current_dice = roll_result + selected
                     # current scoring print/select
-                    #print(game.check_current_scoring(players_objs[x].name, all_current_dice))
                     current_scoring = game.check_current_scoring(players_objs[x].name, all_current_dice)
                     for index, scoring in enumerate(current_scoring, start=1):
                         print(f"{index}. {scoring}")
@@ -453,20 +408,16 @@ def play():
                         if selected == []:                            
                             print("\n---------->>> All dice ready to roll! <<<----------" +"\n")
                             input("\nPress any key to continue.")
-                            
-                            #print("\n" + " SELECT YOUR NEXT MOVE  ".center(60, "~") + "\n")
-                            
                         else:
                             selected = players_objs[x].put_back_dice(roll_result, selected)
-
                         pass
 
                     elif what_next == "3":
-                        # choose the score(3)
+                        # choose the score
                         rolls = 3
                         break
                     elif what_next == '4':
-                        #print(game.print_table(no_players, data_dictionary))
+                        # show table
                         os.system('clear')
                         print(game.print_table(no_players, game.data_dictionary))
                         input("Press any key to continue.")
@@ -477,10 +428,9 @@ def play():
                         break
                     else:
                         pass
-                rolls += 1
-            
-            #print("\n"+"Please choose score for the table.")
-            #print(current_scoring)
+                rolls += 1  
+
+            # input fo tables
             while True:
                 os.system('clear')
                 print(f"Round: {game_round}")
@@ -490,7 +440,6 @@ def play():
                 current_scoring = game.check_current_scoring(players_objs[x].name, all_current_dice)
                 for index, scoring in enumerate(current_scoring, start=1):
                     print(f"{index}. {scoring}")
-                
                 try:
                     score_selection = (int(input("\n"+"Please choose your scoring (use index number).: "))-1)
                 except ValueError:
@@ -505,19 +454,14 @@ def play():
             os.system('clear')
             print(f"Round: {game_round}")
             print(f"{players_objs[x].name}'s turn")
-
             
             # get key and value for table
             key_value_for_table = re.match(r"(^.+)(:\s)(\d+)(\s.*)$", current_scoring[score_selection])
             key = key_value_for_table.group(1)
             value = int(key_value_for_table.group(3))
 
-            # print(key)
-            # print(value)
-
             game.update_table(players_objs[x].name, key, value)
             # check bonus
-            #print(players_objs[x].bonus, "true or false")
             if players_objs[x].bonus == False:
                 players_objs[x].bonus = game.check_upper_section(players_objs[x].name)
             
@@ -530,7 +474,6 @@ def play():
         game_round += 1
 
     print(game.print_table(no_players, game.data_dictionary))
-
     print(game.check_winner(no_players, players_objs))
 
 if __name__ == '__main__':
